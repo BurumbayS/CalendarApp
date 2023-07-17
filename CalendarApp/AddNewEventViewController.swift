@@ -9,12 +9,17 @@ import UIKit
 
 final class AddNewEventViewController: UIViewController {
     
-    private let datePicker = UIDatePicker()
-    private let timePicker = UIDatePicker()
+    private let viewModel: AddNewEventViewModeling
+    
     private var eventDateTextField: UITextField!
     private var eventTimeTextField: UITextField!
+    private var titleTextField: UITextField!
     
-    init() {
+    private let datePicker = UIDatePicker()
+    private let timePicker = UIDatePicker()
+    
+    init(viewModel: AddNewEventViewModeling) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,7 +47,7 @@ final class AddNewEventViewController: UIViewController {
         vStack.spacing = 10
         vStack.axis = .vertical
         
-        let titleTextField = defaultTextField(placeholder: "Event name")
+        titleTextField = defaultTextField(placeholder: "Event name")
         vStack.addArrangedSubview(titleTextField)
         titleTextField.snp.makeConstraints { make in
             make.height.equalTo(50)
@@ -96,7 +101,11 @@ final class AddNewEventViewController: UIViewController {
     }
     
     @objc private func addNewEvent() {
+        let dateString = "\(eventDateTextField.text) \(eventTimeTextField.text)"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMMM yyyy hh:mm a"
         
+        viewModel.addNewEvent(title: titleTextField.text, date: dateFormatter.date(from: dateString))
     }
 }
 

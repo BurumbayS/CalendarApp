@@ -7,6 +7,7 @@ target 'CalendarApp' do
 
   # Pods for CalendarApp
   pod 'SnapKit', '~> 5.6.0'
+  pod 'RealmSwift', '~>10'
 
   target 'CalendarAppTests' do
     inherit! :search_paths

@@ -15,11 +15,7 @@ protocol CalendarViewModeling: AnyObject {
 
 final class CalendarViewModel: CalendarViewModeling {
     
-    private weak var view: CalendarViewProtocol?
-    
-    init(view: CalendarViewProtocol) {
-        self.view = view
-    }
+    weak var view: CalendarViewProtocol?
     
     func loadEvents(for dateComponents: DateComponents) {
         guard let date = Calendar.current.date(from: dateComponents) else {

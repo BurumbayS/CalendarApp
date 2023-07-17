@@ -2,13 +2,19 @@
 //  EventItem.swift
 //  CalendarApp
 //
-//  Created by Sanzhar Burumbay on 17.07.2023.
+//  Created by Sanzhar Burumbay on 18.07.2023.
 //
 
 import Foundation
-import RealmSwift
 
-final class EventItem: Object {
-    @Persisted var title: String
-    @Persisted var date: Date
+struct EventItem {
+    let title: String
+    let time: String
+    
+    init(title: String, date: Date) {
+        self.title = title
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        self.time = dateFormatter.string(from: date)
+    }
 }

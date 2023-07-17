@@ -21,9 +21,9 @@ final class EventItemCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(title: String, time: String) {
-        titleLabel.text = title
-        timeLabel.text = time
+    func configure(from event: EventItem) {
+        titleLabel.text = event.title
+        timeLabel.text = event.time
     }
     
     private func setupViews() {

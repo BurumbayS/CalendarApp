@@ -18,7 +18,7 @@ final class AddNewEventViewModel: AddNewEventViewModeling {
             return
         }
         
-        let event = EventItem()
+        let event = EventItemDTO()
         event.title = title
         event.date = date
         

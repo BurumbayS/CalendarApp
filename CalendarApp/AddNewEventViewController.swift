@@ -101,11 +101,13 @@ final class AddNewEventViewController: UIViewController {
     }
     
     @objc private func addNewEvent() {
-        let dateString = "\(eventDateTextField.text) \(eventTimeTextField.text)"
+        let dateString = "\(eventDateTextField.text ?? "") \(eventTimeTextField.text ?? "")"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMMM yyyy hh:mm a"
         
         viewModel.addNewEvent(title: titleTextField.text, date: dateFormatter.date(from: dateString))
+        
+        navigationController?.popViewController(animated: true)
     }
 }
 

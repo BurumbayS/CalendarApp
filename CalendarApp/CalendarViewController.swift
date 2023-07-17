@@ -8,14 +8,26 @@
 import UIKit
 import SnapKit
 
+protocol CalendarViewProtocol: AnyObject {
+    func updateEventsList(with events: [EventItem])
+}
+
 final class CalendarViewController: UIViewController {
+    
+    private var viewModel: CalendarViewModeling?
+    private var events: [EventItem] = []
     
     private var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViewModel()
         setupNavigationBar()
         setupViews()
+    }
+    
+    private func setupViewModel() {
+        self.viewModel = CalendarViewModel(view: self)
     }
     
     private func setupNavigationBar() {
@@ -49,14 +61,21 @@ final class CalendarViewController: UIViewController {
     }
     
     @objc private func addNewEvent() {
-        let vc = AddNewEventViewController()
+        let vc = AddNewEventViewController(viewModel: AddNewEventViewModel())
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension CalendarViewController: CalendarViewProtocol {
+    func updateEventsList(with events: [EventItem]) {
+        self.events = events
+        self.tableView.reloadData()
     }
 }
 
 extension CalendarViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return events.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -64,7 +83,7 @@ extension CalendarViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        cell.configure(title: "Hello", time: "15:23")
+        cell.configure(from: events[indexPath.row])
         return cell
     }
 }
@@ -77,6 +96,9 @@ extension CalendarViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-        
+        guard let dateComponents else {
+            return
+        }
+        viewModel?.loadEvents(for: dateComponents)
     }
 }

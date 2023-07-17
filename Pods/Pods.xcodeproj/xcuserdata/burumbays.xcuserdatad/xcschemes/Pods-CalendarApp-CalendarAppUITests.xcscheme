@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6FE67F701B5A9D64AC8F44FAB71557F7"
-               BuildableName = "Pods-CalendarApp-CalendarAppUITests.framework"
+               BuildableName = "Pods_CalendarApp_CalendarAppUITests.framework"
                BlueprintName = "Pods-CalendarApp-CalendarAppUITests"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

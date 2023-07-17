@@ -18,9 +18,15 @@ final class CalendarViewController: UIViewController {
     }
     
     private func setupViews() {
+        self.navigationItem.title = "Event Calendar"
+        
+        view.backgroundColor = #colorLiteral(red: 0.9638205171, green: 0.9687921405, blue: 0.9730095267, alpha: 1)
+        
         let calendarView = UICalendarView()
         calendarView.calendar = Calendar(identifier: .gregorian)
         calendarView.delegate = self
+        calendarView.tintColor = #colorLiteral(red: 0.5260997415, green: 0.7271208167, blue: 0.9652654529, alpha: 1)
+        calendarView.backgroundColor = .white
         calendarView.selectionBehavior = UICalendarSelectionSingleDate(delegate: self)
         view.addSubview(calendarView)
         calendarView.snp.makeConstraints { view in
@@ -28,12 +34,13 @@ final class CalendarViewController: UIViewController {
         }
         
         tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = .clear
         tableView.dataSource = self
         tableView.register(EventItemCell.self, forCellReuseIdentifier: String(describing: EventItemCell.self))
         view.addSubview(tableView)
         tableView.snp.makeConstraints { view in
             view.leading.trailing.bottom.equalToSuperview()
-            view.top.equalTo(calendarView.snp.bottom).offset(10)
+            view.top.equalTo(calendarView.snp.bottom).offset(20)
         }
     }
 }
@@ -56,7 +63,8 @@ extension CalendarViewController: UITableViewDataSource {
 extension CalendarViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        return .default(color: .blue, size: .medium)
+        let color = #colorLiteral(red: 1, green: 0.4512969851, blue: 0.6186520457, alpha: 1)
+        return .default(color: color, size: .medium)
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {

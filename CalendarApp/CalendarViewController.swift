@@ -10,12 +10,14 @@ import SnapKit
 
 protocol CalendarViewProtocol: AnyObject {
     func updateEventsList(with events: [EventItem])
+    func updateDatesWithEvents(with dates: [DateComponents])
 }
 
 final class CalendarViewController: UIViewController {
     
     private var viewModel: CalendarViewModeling?
     private var events: [EventItem] = []
+    private var datesWithEvents: [DateComponents] = []
     
     private let calendarView = UICalendarView()
     private var dateSelection: UICalendarSelectionSingleDate!
@@ -33,6 +35,7 @@ final class CalendarViewController: UIViewController {
         super.viewWillAppear(animated)
         if let dateComponents = dateSelection.selectedDate {
             viewModel?.loadEvents(for: dateComponents)
+            viewModel?.loadDatesWithEvents(for: calendarView.visibleDateComponents)
         }
     }
     
@@ -74,6 +77,16 @@ final class CalendarViewController: UIViewController {
         let todayDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: Date())
         dateSelection.setSelected(todayDateComponents, animated: true)
         viewModel?.loadEvents(for: todayDateComponents)
+        viewModel?.loadDatesWithEvents(for: calendarView.visibleDateComponents)
+    }
+    
+    private func setSelectedFirstDayOfMonth() {
+        let todayDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: Date())
+        var dateComponents = calendarView.visibleDateComponents
+        dateComponents.day = (dateComponents.month == todayDateComponents.month && dateComponents.year == todayDateComponents.year) ? todayDateComponents.day : 1
+        dateSelection.setSelected(dateComponents, animated: true)
+        viewModel?.loadEvents(for: dateComponents)
+        viewModel?.loadDatesWithEvents(for: calendarView.visibleDateComponents)
     }
     
     @objc private func addNewEvent() {
@@ -86,6 +99,11 @@ extension CalendarViewController: CalendarViewProtocol {
     func updateEventsList(with events: [EventItem]) {
         self.events = events
         self.tableView.reloadData()
+    }
+    
+    func updateDatesWithEvents(with dates: [DateComponents]) {
+        self.datesWithEvents = dates
+        self.calendarView.reloadDecorations(forDateComponents: datesWithEvents, animated: true)
     }
 }
 
@@ -108,7 +126,11 @@ extension CalendarViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         let color = #colorLiteral(red: 1, green: 0.4512969851, blue: 0.6186520457, alpha: 1)
-        return .default(color: color, size: .medium)
+        return (datesWithEvents.contains(where: { $0.day == dateComponents.day })) ? .default(color: color, size: .medium) : nil
+    }
+    
+    func calendarView(_ calendarView: UICalendarView, didChangeVisibleDateComponentsFrom previousDateComponents: DateComponents) {
+        setSelectedFirstDayOfMonth()
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {

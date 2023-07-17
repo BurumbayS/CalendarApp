@@ -17,6 +17,8 @@ final class CalendarViewController: UIViewController {
     private var viewModel: CalendarViewModeling?
     private var events: [EventItem] = []
     
+    private let calendarView = UICalendarView()
+    private var dateSelection: UICalendarSelectionSingleDate!
     private var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -24,6 +26,7 @@ final class CalendarViewController: UIViewController {
         setupViewModel()
         setupNavigationBar()
         setupViews()
+        setupInitialState()
     }
     
     private func setupViewModel() {
@@ -38,12 +41,12 @@ final class CalendarViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = #colorLiteral(red: 0.9638205171, green: 0.9687921405, blue: 0.9730095267, alpha: 1)
         
-        let calendarView = UICalendarView()
         calendarView.calendar = Calendar(identifier: .gregorian)
         calendarView.delegate = self
         calendarView.tintColor = #colorLiteral(red: 0.5260997415, green: 0.7271208167, blue: 0.9652654529, alpha: 1)
         calendarView.backgroundColor = .white
-        calendarView.selectionBehavior = UICalendarSelectionSingleDate(delegate: self)
+        dateSelection = UICalendarSelectionSingleDate(delegate: self)
+        calendarView.selectionBehavior = dateSelection
         view.addSubview(calendarView)
         calendarView.snp.makeConstraints { view in
             view.leading.trailing.top.equalToSuperview()
@@ -58,6 +61,12 @@ final class CalendarViewController: UIViewController {
             view.leading.trailing.bottom.equalToSuperview()
             view.top.equalTo(calendarView.snp.bottom).offset(20)
         }
+    }
+    
+    private func setupInitialState() {
+        let todayDateComponents = Calendar.current.dateComponents([.day, .month, .year], from: Date())
+        dateSelection.setSelected(todayDateComponents, animated: true)
+        viewModel?.loadEvents(for: todayDateComponents)
     }
     
     @objc private func addNewEvent() {

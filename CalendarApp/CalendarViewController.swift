@@ -29,6 +29,13 @@ final class CalendarViewController: UIViewController {
         setupInitialState()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let dateComponents = dateSelection.selectedDate {
+            viewModel?.loadEvents(for: dateComponents)
+        }
+    }
+    
     private func setupViewModel() {
         self.viewModel = CalendarViewModel(view: self)
     }

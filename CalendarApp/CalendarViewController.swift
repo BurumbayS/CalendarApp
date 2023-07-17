@@ -14,12 +14,16 @@ final class CalendarViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         setupViews()
     }
     
+    private func setupNavigationBar() {
+        navigationItem.title = "Event Calendar"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addNewEvent))
+    }
+    
     private func setupViews() {
-        self.navigationItem.title = "Event Calendar"
-        
         view.backgroundColor = #colorLiteral(red: 0.9638205171, green: 0.9687921405, blue: 0.9730095267, alpha: 1)
         
         let calendarView = UICalendarView()
@@ -42,6 +46,11 @@ final class CalendarViewController: UIViewController {
             view.leading.trailing.bottom.equalToSuperview()
             view.top.equalTo(calendarView.snp.bottom).offset(20)
         }
+    }
+    
+    @objc private func addNewEvent() {
+        let vc = AddNewEventViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
